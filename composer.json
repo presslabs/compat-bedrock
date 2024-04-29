@@ -14,5 +14,12 @@
             "email": "flavius@presslabs.com"
         }
     ],
-    "require": {}
+    "require": {
+        "composer/installers": "^2"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
 }
