@@ -1,0 +1,18 @@
+{
+    "name": "presslabs/compat-bedrock",
+    "description": "A WordPress plugin to integrate Bedrock sites into Presslabs platform.",
+    "license": "GPL-2.0+",
+    "type": "wordpress-muplugin",
+    "autoload": {
+        "psr-4": {
+            "Presslabs\\CompatBedrock\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "amecea",
+            "email": "flavius@presslabs.com"
+        }
+    ],
+    "require": {}
+}
