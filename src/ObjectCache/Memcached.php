@@ -1,6 +1,8 @@
 <?php
 namespace Presslabs\CompatBedrock\ObjectCache;
 
+use Presslabs\CompatBedrock\DNSDiscovery;
+
 
 class Memcached implements ObjectCache {
 
@@ -96,20 +98,35 @@ class Memcached implements ObjectCache {
 		if ( defined( 'WP_CACHE_KEY_SALT' ) )
 			$this->key_salt = WP_CACHE_KEY_SALT;
 
-        if ( defined('MEMCACHED_HOST') && MEMCACHED_HOST ) {
-				$server = explode(':', constant('MEMCACHED_HOST'));
-				if (count($server) == 1) {
-					$server[] = '11211';
-				}
-				$this->servers = array( $server );
+        if ( isset( $_ENV['MEMCACHED_DISCOVERY_HOST'] ) ) {
+            $this->servers = array_map(function ($server) {
+                return array($server['host'], (int)$server['port'] ?: 11211);
+            }, \DNSDiscovery::cachedDiscover(MEMCACHED_DISCOVERY_HOST));
+
+            if (count($this->servers) == 0) {
+                error_log("Cache backend is unavailable.");
+                // TODO: raise exception, die or use only runtime cache.
+            }
+            sort($this->servers);
+
+        } elseif ( defined('MEMCACHED_HOST') && MEMCACHED_HOST ) {
+            $server = explode(':', constant('MEMCACHED_HOST'));
+            if (count($server) == 1) {
+                $server[] = '11211';
+            }
+            $this->servers = array( $server );
         } elseif ( isset( $_ENV['MEMCACHED_HOST'] ) ) {
-				$server = explode(':', $_ENV['MEMCACHED_HOST']);
-				if (count($server) == 1) {
-					$server[] = '11211';
-				}
-				$this->servers = array( $server );
+            $server = explode(':', $_ENV['MEMCACHED_HOST']);
+            if (count($server) == 1) {
+                $server[] = '11211';
+            }
+            $this->servers = array( $server );
         } else {
-            $this->servers = array( array( '127.0.0.1', 11211 ) );
+            if ( isset( $memcached_servers ) ) {
+                $this->servers = $memcached_servers;
+            } else {
+                $this->servers = array( array( '127.0.0.1', 11211 ) );
+            }
         }
 
 		$this->m = new \Memcached();
