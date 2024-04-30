@@ -28,8 +28,10 @@ function require_file_if_exists( $file ) {
     }
 }
 
+// presslabs plugins
+//require order matters
+require_file_if_exists("/www/presslabs/dropins/init.php");
+
 require_file_if_exists("/var/run/presslabs.com/config/wp-config.php");
 
-// presslabs plugins
-require_file_if_exists("/www/presslabs/dropins/init.php");
 require_file_if_exists("/www/presslabs/000-init-presslabs.php");
