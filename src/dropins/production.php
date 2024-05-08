@@ -35,5 +35,6 @@ Config::define('YARPP_CACHE_TYPE', 'postmeta');
 Config::define('COOKIE_DOMAIN', env('COOKIE_DOMAIN') ?? '');
 
 Config::define('WP_AUTO_UPDATE_CORE', false);
+Config::define('AUTOSAVE_INTERVAL', env('AUTOSAVE_INTERVAL') ?? 60);
 
 define( 'PL_COMPAT_BEDROCK_WP_CONFIG_VERSION', 2 );
